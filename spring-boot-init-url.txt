@@ -1,0 +1,1 @@
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.5.7&packaging=jar&jvmVersion=11&groupId=com.github.kh0ma.blog&artifactId=blog-rest-api&name=blog-rest-api&description=Blog%20for%20java%20users&packageName=com.github.kh0ma.blog.api&dependencies=web,security,devtools,data-jpa,validation,h2
