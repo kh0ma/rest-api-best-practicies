@@ -18,8 +18,11 @@
         <rapidoc.version>8.4.9</rapidoc.version>
         <swagger.ui.version>3.52.3</swagger.ui.version>
         <redoc.version>2.0.0-rc.53</redoc.version>
+        <springfox-version>2.9.2</springfox-version>
         <openapi-generator-maven-plugin.version>5.1.0</openapi-generator-maven-plugin.version>
         <apidocs.path>${project.build.outputDirectory}/static/blog-api/1/apidocs</apidocs.path>
+        <api.package>com.github.kh0ma.blog.api</api.package>
+        <input.spec.path>${apidocs.path}/openapi.yaml</input.spec.path>
     </properties>
     <dependencies>
         <dependency>
@@ -60,6 +63,46 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!-- OpenAPI generator required dependencies -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+        <!-- Bean Validation API support -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+        <!--SpringFox dependencies -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-version}</version>
+        </dependency>
+<!-- OpenAPI generator required dependencies -->
     </dependencies>
 
     <build>
@@ -73,7 +116,7 @@
                 <executions>
                     <execution>
                         <id>copy-openapi</id>
-                        <phase>generate-resources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -104,12 +147,36 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${apidocs.path}/openapi.yaml</inputSpec>
+                            <inputSpec>${input.spec.path}</inputSpec>
                             <generatorName>openapi</generatorName>
                             <output>${apidocs.path}</output>
                             <configOptions>
                                 <outputFileName>openapi.json</outputFileName>
                             </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${input.spec.path}</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <configOptions>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <sourceFolder>/</sourceFolder>
+                                <modelPackage>${api.package}.model</modelPackage>
+                                <apiPackage>${api.package}.controllers</apiPackage>
+                                <invokerPackage>${api.package}.controllers</invokerPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useSwaggerAnnotations>false</useSwaggerAnnotations>
+                                <returnResponse>true</returnResponse>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                            <addCompileSourceRoot>true</addCompileSourceRoot> <!-- default -->
+                            <output>${project.build.directory}/generated-sources/blog-api</output>
                         </configuration>
                     </execution>
                 </executions>
@@ -192,5 +259,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
