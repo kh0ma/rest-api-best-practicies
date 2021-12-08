@@ -20,7 +20,7 @@
         <redoc.version>2.0.0-rc.53</redoc.version>
         <springfox-version>2.9.2</springfox-version>
         <openapi-generator-maven-plugin.version>5.1.0</openapi-generator-maven-plugin.version>
-        <apidocs.path>${project.build.outputDirectory}/static/blog-api/1/apidocs</apidocs.path>
+        <apidocs.path>${project.build.outputDirectory}/static/apidocs</apidocs.path>
         <api.package>com.github.kh0ma.blog.api</api.package>
         <input.spec.path>${apidocs.path}/openapi.yaml</input.spec.path>
     </properties>
